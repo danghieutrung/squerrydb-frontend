@@ -18,12 +18,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-import {
-  Episode,
-  LegendPayload,
-  ScatterEpisode,
-  Series,
-} from "@/lib/types";
+import { Episode, LegendPayload, ScatterEpisode, Series } from "@/lib/types";
 
 const COLORS = [
   "#1f77b4",
