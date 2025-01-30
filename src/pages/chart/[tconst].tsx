@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useQuery, gql } from "@apollo/client";
 import client from "../../lib/apolloClient";
 import SquerryChart from "../../components/SquerryChart";
@@ -35,16 +35,11 @@ const GET_RATINGS = gql`
 
 export default function Chart() {
   const router = useRouter();
-  const [tconst, setTconst] = useState<string>("null");
 
-  useEffect(() => {
-    // if (typeof router.query.tconst === "string") {
-    if (
-      typeof router.query.tconst === "string" &&
-      router.query.tconst !== tconst
-    ) {
-      setTconst(router.query.tconst);
-    }
+  const tconst = useMemo(() => {
+    return typeof router.query.tconst === "string"
+      ? router.query.tconst
+      : "null";
   }, [router.query.tconst]);
 
   const { data, loading, error } = useQuery(GET_RATINGS, {

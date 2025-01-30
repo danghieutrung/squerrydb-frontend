@@ -6,7 +6,7 @@ import Link from "next/link";
 import client from "../lib/apolloClient";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { NavBar } from "@/components/NavBar";
-import {Series} from "@/lib/types"
+import { Series } from "@/lib/types";
 
 import "../app/globals.css";
 

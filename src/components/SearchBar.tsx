@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useLazyQuery, gql } from "@apollo/client";
 import client from "../lib/apolloClient";
 import Link from "next/link";
-import {Series} from "@/lib/types"
+import { Series } from "@/lib/types";
 
 const SEARCH_SERIES = gql`
   query searchSeries($name: String!) {

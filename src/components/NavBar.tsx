@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { SearchBar } from "./SearchBar";
 import { useRouter } from "next/router";
-// import Image from "next/image";
 
 export function NavBar({
   displaySearchBar = true,
