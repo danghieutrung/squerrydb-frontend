@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/chart";
 
 import {
-  BarProps,
   Episode,
   LegendPayload,
   ScatterEpisode,
@@ -120,7 +119,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
     }
   };
 
-  const handleLegendMouseLeave = (e: LegendPayload) => {
+  const handleLegendMouseLeave = () => {
     setBarProps({ ...barProps, hover: "" });
   };
 
