@@ -79,7 +79,7 @@ export function NavBar({
             </li>
             <li>
               <a
-                href="https://github.com/your-username"
+                href="https://https://github.com/danghieutrung"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center py-2 px-3 space-x-2 text-black hover:text-gray-600 transition-colors"
@@ -98,7 +98,7 @@ export function NavBar({
             </li>
             <li>
               <a
-                href="https://www.linkedin.com/in/your-profile"
+                href="https://www.linkedin.com/in/trunghieudang"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center py-2 px-3 space-x-2 text-black hover:text-blue-600 transition-colors"
@@ -124,7 +124,7 @@ export function NavBar({
               >
                 <span>Website</span>
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://dangtrunghieu.vercel.app/"
                   width="20"
                   height="20"
                   viewBox="0 0 24 24"
