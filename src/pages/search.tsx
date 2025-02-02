@@ -40,7 +40,7 @@ export default function SearchPage() {
   return (
     <div>
       <link rel="icon" href="/squirrel_icon2.png" sizes="any" />
-      <NavBar displaySearchBar={true} displayNavSearchBar={true} />
+      <NavBar displayNavSearchBar={true} />
       <div className="p-6">
         <h1 className="text-2xl text-black font-bold mb-4 text-left">
           Search &quot;{query}&quot;

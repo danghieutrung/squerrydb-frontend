@@ -3,7 +3,6 @@ import { NavSearchBar } from "./NavSearchBar";
 import { useRouter } from "next/router";
 
 export function NavBar({
-  displaySearchBar = true,
   displayNavSearchBar = true,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
