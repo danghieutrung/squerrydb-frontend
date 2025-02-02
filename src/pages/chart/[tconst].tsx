@@ -59,7 +59,7 @@ export default function Chart() {
 
   return (
     <div>
-      <NavBar displaySearchButton={false} />
+      <NavBar displayNavSearchBar={true} />
       <div className="p-2">
         <h1 className="text-2xl font-bold text-center">
           {seriesData?.primarytitle} - {seriesData?.averagerating}
