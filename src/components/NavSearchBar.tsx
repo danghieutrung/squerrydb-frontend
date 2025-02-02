@@ -6,8 +6,8 @@ import Link from "next/link";
 import { Series } from "@/lib/types";
 
 const SEARCH_SERIES = gql`
-  query searchSeries($name: String!) {
-    searchSeries(name: $name) {
+  query searchSeries($name: String!, $isLimit: Boolean) {
+    searchSeries(name: $name, isLimit: $isLimit) {
       tconst
       startyear
       primarytitle
@@ -33,7 +33,9 @@ export function NavSearchBar({ placeholder = "Search..." }) {
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
-    fetchSearchResults({ variables: { name: event.target.value || "" } });
+    fetchSearchResults({
+      variables: { name: event.target.value || "", isLimit: true },
+    });
     if (searchTerm.trim().length > 1) {
       setDropdownVisible(true);
     } else {
@@ -88,6 +90,16 @@ export function NavSearchBar({ placeholder = "Search..." }) {
                 </Link>
               </li>
             ))}
+            <li>
+              <button
+                onClick={() =>
+                  router.push(`/search?query=${encodeURIComponent(searchTerm)}`)
+                }
+                className="w-full text-xs text-left px-3 py-1 text-blue-600 hover:bg-gray-200 dark:text-blue-400 dark:hover:bg-gray-600"
+              >
+                More results...
+              </button>
+            </li>
           </ul>
         </div>
       )}

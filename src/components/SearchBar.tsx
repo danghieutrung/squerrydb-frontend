@@ -6,8 +6,8 @@ import Link from "next/link";
 import { Series } from "@/lib/types";
 
 const SEARCH_SERIES = gql`
-  query searchSeries($name: String!) {
-    searchSeries(name: $name) {
+  query searchSeries($name: String!, $isLimit: Boolean) {
+    searchSeries(name: $name, isLimit: $isLimit) {
       tconst
       startyear
       primarytitle
@@ -33,7 +33,9 @@ export function SearchBar({ placeholder = "Game of Thrones" }) {
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
-    fetchSearchResults({ variables: { name: event.target.value || "" } });
+    fetchSearchResults({
+      variables: { name: event.target.value || "", isLimit: true },
+    });
     if (searchTerm.trim().length > 1) {
       setDropdownVisible(true);
     } else {
