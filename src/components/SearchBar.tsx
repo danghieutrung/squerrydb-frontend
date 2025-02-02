@@ -15,10 +15,7 @@ const SEARCH_SERIES = gql`
   }
 `;
 
-export function SearchBar({
-  placeholder = "Game of Thrones",
-  displaySearchButton = true,
-}) {
+export function SearchBar({ placeholder = "Game of Thrones" }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const router = useRouter();
@@ -34,9 +31,9 @@ export function SearchBar({
     }
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    fetchSearchResults({ variables: { name: e.target.value || "" } });
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    fetchSearchResults({ variables: { name: event.target.value || "" } });
     if (searchTerm.trim().length > 1) {
       setDropdownVisible(true);
     } else {
@@ -83,14 +80,12 @@ export function SearchBar({
             required
           />
 
-          {displaySearchButton && (
-            <button
-              type="submit"
-              className="text-white bg-indigo-500 hover:bg-indigo-600 px-5 py-2.5 text-sm font-medium dark:bg-indigo-500 dark:hover:bg-indigo-600"
-            >
-              Search
-            </button>
-          )}
+          <button
+            type="submit"
+            className="text-white bg-indigo-500 hover:bg-indigo-600 px-5 py-2.5 text-sm font-medium dark:bg-indigo-500 dark:hover:bg-indigo-600"
+          >
+            Search
+          </button>
         </div>
       </form>
 
