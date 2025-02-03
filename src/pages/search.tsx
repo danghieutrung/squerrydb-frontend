@@ -1,11 +1,14 @@
 "use client";
 
 import { useRouter } from "next/router";
-import { useQuery, gql } from "@apollo/client";
 import Link from "next/link";
-import client from "../lib/apolloClient";
-import { ErrorMessage } from "@/components/ErrorMessage";
+
+import { useQuery, gql } from "@apollo/client";
+import client from "@/lib/apolloClient";
+
 import { NavBar } from "@/components/NavBar";
+import { ErrorMessage } from "@/components/ErrorMessage";
+
 import { Series } from "@/lib/types";
 
 import "../app/globals.css";
@@ -39,7 +42,6 @@ export default function SearchPage() {
 
   return (
     <div>
-      <link rel="icon" href="/squirrel_icon2.png" sizes="any" />
       <NavBar displayNavSearchBar={true} />
       <div className="p-6">
         <h1 className="text-2xl text-black font-bold mb-4 text-left">

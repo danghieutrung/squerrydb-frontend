@@ -1,12 +1,14 @@
 "use client";
 
-import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { useRouter } from "next/router";
+
 import { useQuery, gql } from "@apollo/client";
-import client from "../../lib/apolloClient";
-import SquerryChart from "../../components/SquerryChart";
-import { ErrorMessage } from "@/components/ErrorMessage";
+import client from "@/lib/apolloClient";
+
 import { NavBar } from "@/components/NavBar";
+import { ErrorMessage } from "@/components/ErrorMessage";
+import SquerryChart from "@/components/SquerryChart";
 
 import "../../app/globals.css";
 
