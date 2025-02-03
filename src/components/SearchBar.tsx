@@ -32,11 +32,12 @@ export function SearchBar({ placeholder = "Game of Thrones" }) {
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    const searchValue = event.target.value;
+    setSearchTerm(searchValue);
     fetchSearchResults({
       variables: { name: event.target.value || "", isLimit: true },
     });
-    if (searchTerm.trim().length > 1) {
+    if (searchValue.trim().length > 0) {
       setDropdownVisible(true);
     } else {
       setDropdownVisible(false);
