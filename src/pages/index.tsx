@@ -28,7 +28,7 @@ export default function Home() {
       </div>
       <div className="fixed bottom-4 w-full text-center text-sm text-gray-600">
         Contact me at{" "}
-        <a href="mailto:lol@lol.com" className="underline">
+        <a href="mailto:hieudangtrung@protonmail.com" className="underline">
           hieudangtrung@protonmail.com
         </a>
       </div>
