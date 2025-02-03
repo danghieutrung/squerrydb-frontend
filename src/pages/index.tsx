@@ -8,9 +8,9 @@ import "../app/globals.css";
 export default function Home() {
   return (
     <div>
-      <NavBar displayNavSearchBar={true} />
+      <NavBar displayNavSearchBar={false} />
       <div className="p-20">
-        <h1 className="text-3xl font-bold mb-4 text-center">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-4 text-center">
           IMDb Series Search
         </h1>
         <SearchBar />
