@@ -140,6 +140,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
             label={{
               value: "Episode",
               position: "insideBottom",
+              offset: 0,
               ...axisConfig,
             }}
             ticks={finalEpisodes.slice(1)}
