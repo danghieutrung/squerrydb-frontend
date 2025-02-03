@@ -46,13 +46,6 @@ export function SearchBar({ placeholder = "Game of Thrones" }) {
   return (
     <div className="relative max-w-md mx-auto">
       <form onSubmit={handleSearch} className="w-full">
-        <label
-          htmlFor="default-search"
-          className="mb-1 text-xs font-medium text-gray-900 sr-only dark:text-white"
-        >
-          Search
-        </label>
-
         <div className="relative flex items-center w-full rounded-full border border-gray-300 bg-gray-50 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus-within:ring-blue-500">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg
@@ -78,20 +71,19 @@ export function SearchBar({ placeholder = "Game of Thrones" }) {
             placeholder={placeholder}
             value={searchTerm}
             onChange={onChange}
-            className="w-full p-2.5 pl-10 text-sm text-gray-900 bg-transparent focus:outline-none dark:text-white"
+            className="w-full p-2.5 sm:pl-10 pl-9 text-sm text-gray-900 bg-transparent focus:outline-none dark:text-white"
             required
           />
 
           <button
             type="submit"
-            className="text-white bg-indigo-500 hover:bg-indigo-600 px-5 py-2.5 text-sm font-medium dark:bg-indigo-500 dark:hover:bg-indigo-600"
+            className="text-white bg-indigo-500 hover:bg-indigo-600 md:px-5 px-2 py-3 md:text-sm text-xs font-medium dark:bg-indigo-500 dark:hover:bg-indigo-600"
           >
             Search
           </button>
         </div>
       </form>
 
-      {/* Dropdown Suggestions */}
       {isDropdownVisible && data?.searchSeries?.length > 0 && (
         <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-700 dark:border-gray-600">
           <ul className="divide-y divide-gray-200 dark:divide-gray-600">

@@ -65,7 +65,6 @@ export function NavBar({ displayNavSearchBar = true }) {
           </button>
         </div>
 
-        {/* Dropdown Menu */}
         {menuOpen && (
           <div className="absolute top-12 right-4 w-40 bg-white shadow-md rounded-lg z-50">
             <ul className="font-medium flex flex-col p-2 space-y-1">
