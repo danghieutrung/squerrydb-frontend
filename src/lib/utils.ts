@@ -1,39 +1,58 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { ScatterEpisode, BestFitLine } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-// type Point = { x: number; y: number };
+export function computeBestFitLine(
+  data: Record<number, ScatterEpisode[]>
+): Record<number, BestFitLine> {
+  const result: Record<number, BestFitLine> = {};
 
-// export function getBestFitLine(data: Point[]): { start: Point; end: Point } {
-//     if (data.length < 2) {
-//         throw new Error("At least two data points are required.");
-//     }
+  for (const [seasonStr, episodes] of Object.entries(data)) {
+    const season: number = Number(seasonStr);
 
-//     // Calculate mean of x and y
-//     const n = data.length;
-//     let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+    if (episodes.length < 2) {
+      result[season] = [
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+      ];
+      continue;
+    }
 
-//     for (const point of data) {
-//         sumX += point.x;
-//         sumY += point.y;
-//         sumXY += point.x * point.y;
-//         sumX2 += point.x * point.x;
-//     }
+    const xValues = episodes.map((e) => e.x);
+    const yValues = episodes.map((e) => e.y);
 
-//     const meanX = sumX / n;
-//     const meanY = sumY / n;
+    const n = xValues.length;
+    const sumX = xValues.reduce((sum, val) => sum + val, 0);
+    const sumY = yValues.reduce((sum, val) => sum + val, 0);
+    const sumXY = xValues.reduce((sum, val, i) => sum + val * yValues[i], 0);
+    const sumX2 = xValues.reduce((sum, val) => sum + val * val, 0);
 
-//     // Calculate slope (m) and intercept (b) using least squares regression formula
-//     const m = (sumXY - n * meanX * meanY) / (sumX2 - n * meanX * meanX);
-//     const b = meanY - m * meanX;
+    // Compute slope (m) and y-intercept (b) using least squares method
+    const denominator = n * sumX2 - sumX * sumX;
+    if (denominator === 0) {
+      result[season] = [
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+      ];
+      continue;
+    }
 
-//     // Find the min and max x values in the dataset
-//     const minX = Math.min(...data.map(p => p.x));
-//     const maxX = Math.max(...data.map(p => p.x));
+    const m = (n * sumXY - sumX * sumY) / denominator;
+    const b = (sumY - m * sumX) / n;
 
-//     // return { start, end };
-//     return [{ x: minX, end: m * minX + b }, { x: maxX, end: m * maxX + b }]
-// }
+    // Define the best fit line as an array of two points
+    const xMin = Math.min(...xValues);
+    const xMax = Math.max(...xValues);
+
+    result[season] = [
+      { x: xMin, y: m * xMin + b },
+      { x: xMax, y: m * xMax + b },
+    ];
+  }
+
+  return result;
+}

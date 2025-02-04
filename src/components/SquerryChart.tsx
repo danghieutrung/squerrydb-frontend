@@ -18,7 +18,14 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-import { Episode, LegendPayload, ScatterEpisode, Series } from "@/lib/types";
+import {
+  Episode,
+  BestFitLine,
+  LegendPayload,
+  ScatterEpisode,
+  Series,
+} from "@/lib/types";
+import { computeBestFitLine } from "@/lib/utils";
 
 const COLORS = [
   "#1f77b4",
@@ -39,14 +46,7 @@ const axisConfig = {
   strokeWidth: 0.5,
 };
 
-const chartConfig = {
-  x: {
-    label: "Episode",
-  },
-  y: {
-    label: "Rating",
-  },
-} satisfies ChartConfig;
+const chartConfig = {} satisfies ChartConfig;
 
 export default function SquerryChart({ seriesData }: { seriesData: Series }) {
   const [barProps, setBarProps] = useState<Record<string, string | boolean>>({
@@ -125,6 +125,9 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
       hover: "",
     });
   };
+
+  const bestFitLines: Record<number, BestFitLine> =
+    computeBestFitLine(groupedRatingsData);
 
   if (!finalEpisodes.length)
     return <p className="text-center">Loading chart...</p>;
@@ -229,6 +232,20 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
               ></Scatter>
             );
           })}
+
+            {Object.keys(bestFitLines).map((seasonKey) => {
+              const season: number = Number(seasonKey);
+              const segment: BestFitLine = bestFitLines[season];
+              return (
+                <ReferenceLine
+                  key={`BestFit-${season}`}
+                  segment={segment}
+                  stroke={COLORS[(season - 1) % COLORS.length]}
+                  strokeWidth={barProps[`Season ${season}`] ? 0 : 1}
+                />
+              );
+            })}
+
           {finalEpisodes.slice(1).map((value, index) => (
             <ReferenceLine
               key={`XRefLine-${index}`}
@@ -238,6 +255,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
               strokeWidth={0.3}
             />
           ))}
+
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value, index) => (
             <ReferenceLine
               key={`YRefLine-${index}`}

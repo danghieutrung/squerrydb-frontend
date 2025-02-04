@@ -47,3 +47,8 @@ export type LegendPayload = {
 };
 
 export type BarProps = Record<string, string|boolean>;
+
+export type BestFitLine = {
+  x: number;
+  y: number;
+}[];
