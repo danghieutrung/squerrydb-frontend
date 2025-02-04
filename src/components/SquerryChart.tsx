@@ -128,7 +128,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
   return (
     <div>
       <ChartContainer config={chartConfig} className="w-full h-96">
-        <LineChart margin={{ top: 20, right: 30, left: 20, bottom: 40 }}>
+        <LineChart margin={{ top: 15, right: 20, left: 10, bottom: 25 }}>
           <XAxis
             type="number"
             dataKey="x"
@@ -212,7 +212,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
             return (
               <Line
                 data={groupedRatingsData[season]}
-                key={`season-${season}`}
+                key={`season-${season}${season < 10 ? " " : ""}`}
                 name={`Season ${season}`}
                 dataKey="y"
                 type="natural"
