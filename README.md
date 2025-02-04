@@ -1,6 +1,8 @@
 ## Next.js Frontend Application for [SquerryDB](https://squerrydb-frontend-production.up.railway.app/)
+Visualizing App for IMDb Series. Data downloaded at [IMDb Non-Commercial Datasets](https://developer.imdb.com/non-commercial-datasets/).
 - Framework: Next.js, React
 - Language: TypeScript
 - Visualization: Recharts, Shadcn
-![image](https://github.com/user-attachments/assets/4998c140-4e33-49c3-9889-18e191dfc2b6)
+
+![demo](https://github.com/danghieutrung/squerrydb-frontend/blob/main/public/demo.gif)
 
