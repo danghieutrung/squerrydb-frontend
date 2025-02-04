@@ -15,14 +15,14 @@ export default function Home() {
         </h1>
 
         <div className="flex flex-col items-center w-full">
-          <div className="w-full max-w-md">
+          <div className="w-full max-w-md pb-[5vh]">
             <SearchBar />
           </div>
 
           <img
             src="/demo.gif"
             alt="IMDb Search Demo"
-            className="pt-[5vh] w-full max-w-md rounded-lg shadow-lg"
+            className="w-full max-w-md rounded-lg shadow-lg"
           />
         </div>
       </div>
