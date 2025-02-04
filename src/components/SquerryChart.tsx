@@ -2,14 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 
-import {
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  Legend,
-  ReferenceLine,
-} from "recharts";
+import { Line, XAxis, YAxis, Legend, ReferenceLine, LineChart } from "recharts";
 
 import {
   ChartConfig,
@@ -28,14 +21,14 @@ import {
 import { computeBestFitLine } from "@/lib/utils";
 
 const COLORS = [
-  "#1f77b4",
-  "#ff7f0e",
-  "#2ca02c",
-  "#d62728",
-  "#9467bd",
-  "#8c564b",
-  "#e377c2",
-  "#7f7f7f",
+  "#7D5A50",
+  "#8E1616",
+  "#EC994B",
+  "#B771E5",
+  "#8F71FF",
+  "#368B85",
+  "#2940D3",
+  "#CA3E6B",
   "#bcbd22",
   "#17becf",
 ];
@@ -135,7 +128,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
   return (
     <div>
       <ChartContainer config={chartConfig} className="w-full h-96">
-        <ScatterChart margin={{ top: 20, right: 30, left: 20, bottom: 40 }}>
+        <LineChart margin={{ top: 20, right: 30, left: 20, bottom: 40 }}>
           <XAxis
             type="number"
             dataKey="x"
@@ -150,6 +143,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
             tickLine={false}
             tick={axisConfig}
             domain={[0, finalEpisodes[finalEpisodes.length - 1] + 0.5]}
+            allowDuplicatedCategory={false}
           />
 
           <YAxis
@@ -158,7 +152,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
             domain={[0, 10]}
             ticks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
             label={{
-              value: "Episode Rating",
+              value: "Rating",
               angle: -90,
               position: "Left",
               ...axisConfig,
@@ -167,10 +161,9 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
           />
 
           <ChartTooltip
+            cursor={false}
             content={
               <ChartTooltipContent
-                indicator="dot"
-                className="w-[180px]"
                 labelFormatter={(label, payload) => (
                   <strong style={{ color: payload[0].payload.color }}>
                     {payload[0].payload.season}.{payload[0].payload.episode} -{" "}
@@ -178,10 +171,6 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
                   </strong>
                 )}
                 formatter={(value, name, item) => {
-                  if (name === "xaxis") {
-                    return null;
-                  }
-
                   return (
                     <>
                       <div
@@ -206,33 +195,52 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
                 }}
               />
             }
-            cursor={false}
-            defaultIndex={1}
           />
 
           <Legend
             wrapperStyle={{
               position: "relative",
             }}
+            iconType="circle"
             onClick={selectSeasonLegend}
             onMouseOver={handleLegendMouseEnter}
             onMouseOut={handleLegendMouseLeave}
           />
 
           {uniqueSeasons.map((season) => {
+            const color = COLORS[(season - 1) % COLORS.length];
             return (
-              <Scatter
+              <Line
+                data={groupedRatingsData[season]}
                 key={`season-${season}`}
                 name={`Season ${season}`}
-                data={groupedRatingsData[season]}
-                fill={COLORS[(season - 1) % COLORS.length]}
+                dataKey="y"
+                type="natural"
+                stroke={color}
+                strokeWidth={0}
+                dot={{
+                  r: 3,
+                  fill: color,
+                }}
+                activeDot={{
+                  r: 6,
+                  fill: color,
+                  onClick: (
+                    event: React.MouseEvent<SVGCircleElement, MouseEvent>,
+                    payload?: { payload: { tconst: string } }
+                  ) => {
+                    if (payload && payload.payload) {
+                      const tconst = payload.payload.tconst;
+                      console.log(typeof payload);
+                      window.open(
+                        `https://www.imdb.com/title/${tconst}/`,
+                        "_blank"
+                      );
+                    }
+                  },
+                }}
                 hide={barProps[`Season ${season}`] === true}
-                fillOpacity={Number(
-                  barProps["hover"] === `Season ${season}` || !barProps["hover"]
-                    ? 1
-                    : 0.25
-                )}
-              ></Scatter>
+              ></Line>
             );
           })}
 
@@ -268,7 +276,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
               strokeWidth={0.2}
             />
           ))}
-        </ScatterChart>
+        </LineChart>
       </ChartContainer>
     </div>
   );
