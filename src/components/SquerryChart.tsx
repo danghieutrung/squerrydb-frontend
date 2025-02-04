@@ -172,7 +172,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
                 indicator="dot"
                 className="w-[180px]"
                 labelFormatter={(label, payload) => (
-                  <strong>
+                  <strong style={{ color: payload[0].payload.color }}>
                     {payload[0].payload.season}.{payload[0].payload.episode} -{" "}
                     {payload[0].payload.primarytitle}
                   </strong>
@@ -192,9 +192,12 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
                           } as React.CSSProperties
                         }
                       />
-                      <div>{value}</div>
+                      <div style={{ color: item.payload.color }}>{value}</div>
                       <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                        <span className="font-normal text-muted-foreground">
+                        <span
+                          className="font-normal text-muted-foreground"
+                          style={{ color: item.payload.color }}
+                        >
                           ({item.payload.numvotes} votes)
                         </span>
                       </div>
@@ -233,18 +236,18 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
             );
           })}
 
-            {Object.keys(bestFitLines).map((seasonKey) => {
-              const season: number = Number(seasonKey);
-              const segment: BestFitLine = bestFitLines[season];
-              return (
-                <ReferenceLine
-                  key={`BestFit-${season}`}
-                  segment={segment}
-                  stroke={COLORS[(season - 1) % COLORS.length]}
-                  strokeWidth={barProps[`Season ${season}`] ? 0 : 1}
-                />
-              );
-            })}
+          {Object.keys(bestFitLines).map((seasonKey) => {
+            const season: number = Number(seasonKey);
+            const segment: BestFitLine = bestFitLines[season];
+            return (
+              <ReferenceLine
+                key={`BestFit-${season}`}
+                segment={segment}
+                stroke={COLORS[(season - 1) % COLORS.length]}
+                strokeWidth={barProps[`Season ${season}`] ? 0 : 1}
+              />
+            );
+          })}
 
           {finalEpisodes.slice(1).map((value, index) => (
             <ReferenceLine
