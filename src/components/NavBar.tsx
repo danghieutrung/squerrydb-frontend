@@ -66,7 +66,7 @@ export function NavBar({ displayNavSearchBar = true }) {
         </div>
 
         {menuOpen && (
-          <div className="absolute top-12 right-4 w-40 bg-white shadow-md rounded-lg z-50">
+          <div className="absolute top-14 right-4 w-40 bg-white shadow-md rounded-lg z-50">
             <ul className="font-medium flex flex-col p-2 space-y-1">
               <li className="flex items-center py-1 px-2 space-x-2 text-black text-sm">
                 Dang Trung Hieu
