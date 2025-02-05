@@ -21,21 +21,21 @@ import {
 import { computeBestFitLine } from "@/lib/utils";
 
 const COLORS = [
-  "#7D5A50",
+  "#4B164C",
+  "#DDA853",
   "#8E1616",
-  "#EC994B",
   "#B771E5",
   "#8F71FF",
   "#368B85",
   "#2940D3",
   "#CA3E6B",
-  "#bcbd22",
-  "#17becf",
+  "#BCBD22",
+  "#17BECF",
 ];
 
 const axisConfig = {
   fontSize: 12,
-  stroke: "#c9a0ff",
+  stroke: "#C9A0FF",
   strokeWidth: 0.5,
 };
 
@@ -128,7 +128,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
   return (
     <div>
       <ChartContainer config={chartConfig} className="w-full h-96">
-        <LineChart margin={{ top: 15, right: 20, left: 10, bottom: 25 }}>
+        <LineChart margin={{ top: 15, right: 20, left: 10, bottom: 20 }}>
           <XAxis
             type="number"
             dataKey="x"
@@ -200,6 +200,7 @@ export default function SquerryChart({ seriesData }: { seriesData: Series }) {
           <Legend
             wrapperStyle={{
               position: "relative",
+              marginTop: "-10px",
             }}
             iconType="circle"
             onClick={selectSeasonLegend}

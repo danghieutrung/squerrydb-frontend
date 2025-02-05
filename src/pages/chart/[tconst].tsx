@@ -78,7 +78,7 @@ export default function Chart() {
           onClick={() =>
             window.open(`https://www.imdb.com/title/${tconst}/`, "_blank")
           }
-          className="px-4 py-2 bg-violet-500 text-white rounded block mx-auto"
+          className="mt-2 px-4 py-2 bg-violet-500 text-white rounded block mx-auto"
         >
           View &quot;{seriesData.primarytitle}&quot; on IMDb
         </button>
