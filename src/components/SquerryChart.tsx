@@ -13,7 +13,7 @@ import { ChartConfig, ChartContainer, ChartTooltip } from "@/components/ui/chart
 import { ScatterEpisode } from "@/lib/types";
 import { cn, computeBestFitLine } from "@/lib/utils";
 import { episodeCode, SeasonSummary } from "@/lib/series";
-import { formatVotes } from "@/lib/format";
+import { formatVotes, ratingColor } from "@/lib/format";
 import { imdbTitleUrl } from "@/lib/links";
 
 const chartConfig = {} satisfies ChartConfig;
@@ -297,7 +297,9 @@ function EpisodeTooltip({
       </div>
       <p className="mt-1 font-medium leading-snug">{ep.primarytitle}</p>
       <div className="mt-1.5 flex items-baseline gap-2">
-        <span className="text-lg font-semibold tabular-nums">
+        <span
+          className={cn("text-lg font-semibold tabular-nums", ratingColor(ep.rating))}
+        >
           {ep.rating.toFixed(1)}
         </span>
         <span className="text-xs text-muted-foreground">

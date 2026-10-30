@@ -13,7 +13,14 @@ import { Layout } from "@/components/Layout";
 import { StatusMessage } from "@/components/StatusMessage";
 import SquerryChart from "@/components/SquerryChart";
 import { ScatterEpisode, Series } from "@/lib/types";
-import { formatRating, formatVotes, formatYears } from "@/lib/format";
+import {
+  formatRating,
+  formatVotes,
+  formatYears,
+  RATING_BANDS,
+  ratingColor,
+} from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { episodeCode, SeasonSummary, summarizeSeasons } from "@/lib/series";
 import { imdbTitleUrl } from "@/lib/links";
 
@@ -150,7 +157,12 @@ function SeriesHeader({
 
       <div className="flex items-center gap-4">
         <div className="text-right">
-          <p className="text-3xl font-bold tabular-nums text-primary">
+          <p
+            className={cn(
+              "text-3xl font-bold tabular-nums",
+              ratingColor(series.averagerating)
+            )}
+          >
             {formatRating(series.averagerating)}
             <span className="text-base font-medium text-muted-foreground">
               /10
@@ -199,7 +211,12 @@ function Highlights({ seasons }: { seasons: SeasonSummary[] }) {
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Best season
         </p>
-        <p className="mt-3 text-2xl font-semibold tabular-nums">
+        <p
+          className={cn(
+            "mt-3 text-2xl font-semibold tabular-nums",
+            ratingColor(bestSeason.average)
+          )}
+        >
           {bestSeason.average.toFixed(2)}
         </p>
         <p className="mt-1 text-sm">
@@ -233,7 +250,12 @@ function EpisodeCard({
         <Icon className="h-3.5 w-3.5" />
         {label}
       </p>
-      <p className="mt-3 text-2xl font-semibold tabular-nums">
+      <p
+        className={cn(
+          "mt-3 text-2xl font-semibold tabular-nums",
+          ratingColor(episode.rating)
+        )}
+      >
         {episode.rating.toFixed(1)}
       </p>
       <p className="mt-1 truncate text-sm group-hover:text-primary">
@@ -244,10 +266,26 @@ function EpisodeCard({
   );
 }
 
+function RatingKey() {
+  return (
+    <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+      {RATING_BANDS.map(({ label, dot }) => (
+        <li key={label} className="flex items-center gap-1.5">
+          <span className={cn("h-2 w-2 rounded-full", dot)} />
+          {label}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function SeasonTable({ seasons }: { seasons: SeasonSummary[] }) {
   return (
     <section className="mt-4 overflow-hidden rounded-2xl border bg-card">
-      <h2 className="px-5 pt-5 font-semibold sm:px-6">Season by season</h2>
+      <div className="flex flex-wrap items-center justify-between gap-2 px-5 pt-5 sm:px-6">
+        <h2 className="font-semibold">Season by season</h2>
+        <RatingKey />
+      </div>
       <div className="mt-3 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -275,7 +313,12 @@ function SeasonTable({ seasons }: { seasons: SeasonSummary[] }) {
                 <td className="hidden px-3 py-3 text-right tabular-nums sm:table-cell">
                   {episodes.length}
                 </td>
-                <td className="px-3 py-3 text-right font-medium tabular-nums">
+                <td
+                  className={cn(
+                    "px-3 py-3 text-right font-semibold tabular-nums",
+                    ratingColor(average)
+                  )}
+                >
                   {average.toFixed(2)}
                 </td>
                 <td className="hidden max-w-[16rem] truncate px-5 py-3 sm:table-cell sm:px-6">
@@ -285,7 +328,12 @@ function SeasonTable({ seasons }: { seasons: SeasonSummary[] }) {
                     rel="noopener noreferrer"
                     className="hover:text-primary"
                   >
-                    <span className="tabular-nums text-muted-foreground">
+                    <span
+                      className={cn(
+                        "font-medium tabular-nums",
+                        ratingColor(best.rating)
+                      )}
+                    >
                       {best.rating.toFixed(1)}
                     </span>{" "}
                     {best.primarytitle}
