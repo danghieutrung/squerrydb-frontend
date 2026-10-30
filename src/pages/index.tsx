@@ -83,9 +83,9 @@ export default function Home() {
         <div className="grid gap-3 sm:grid-cols-3">
           {STEPS.map(({ icon: Icon, title, text }, index) => (
             <div key={title} className="rounded-xl border bg-card p-4">
-              <div className="mb-2.5 flex items-center gap-2.5">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-secondary text-primary">
-                  <Icon className="h-4 w-4" />
+              <div className="mb-3 flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 text-white shadow-md shadow-primary/25">
+                  <Icon className="h-5 w-5" />
                 </span>
                 <span className="text-xs font-medium text-muted-foreground">
                   Step {index + 1}
