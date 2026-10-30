@@ -9,10 +9,6 @@ export default {
   ],
   theme: {
   	extend: {
-  		screens: {
-  			short: { raw: '(max-height: 680px)' },
-  			tiny: { raw: '(max-height: 560px)' }
-  		},
   		fontFamily: {
   			sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
   			mono: ['var(--font-mono)', 'ui-monospace', 'monospace']

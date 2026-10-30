@@ -32,14 +32,16 @@ const STEPS = [
 
 export default function Home() {
   return (
-    <Layout showSearch={false} centered>
+    <Layout showSearch={false} stickyFooter>
       <section className="relative">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-1/2 -z-10 mx-auto h-[28rem] max-w-4xl -translate-y-1/2 rounded-full bg-gradient-to-br from-violet-300/50 via-purple-200/40 to-fuchsia-200/30 blur-3xl"
-        />
-        <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-6 pt-6 text-center sm:pt-8 short:pb-4 short:pt-3">
-          <span className="mb-3 inline-flex items-center short:hidden gap-1.5 rounded-full border border-primary/20 bg-card/70 px-2.5 py-0.5 text-xs font-medium text-primary">
+          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+        >
+          <div className="absolute inset-x-0 -top-40 mx-auto h-[32rem] max-w-4xl rounded-full bg-gradient-to-br from-violet-300/50 via-purple-200/40 to-fuchsia-200/30 blur-3xl" />
+        </div>
+        <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-6 pt-6 text-center sm:pt-8">
+          <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-card/70 px-2.5 py-0.5 text-xs font-medium text-primary">
             <Sparkles className="h-3 w-3" />
             Episode ratings, visualized
           </span>
@@ -49,7 +51,7 @@ export default function Home() {
               really stacks up
             </span>
           </h1>
-          <p className="mt-3 max-w-lg text-balance text-muted-foreground [@media(max-width:639px)_and_(max-height:680px)]:hidden tiny:hidden">
+          <p className="mt-3 max-w-lg text-balance text-muted-foreground">
             SquerryDB charts the IMDb rating of every episode of a TV series, so
             you can spot the peaks, the slumps and the season that lost the
             plot.
@@ -59,7 +61,7 @@ export default function Home() {
             variant="hero"
             placeholder="Try “Breaking Bad”"
             autoFocus
-            className="mt-6 max-w-xl short:mt-4"
+            className="mt-6 max-w-xl"
           />
 
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
@@ -77,23 +79,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-5xl px-4 pb-8 sm:px-6 short:pb-4">
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+      <section className="mx-auto max-w-5xl px-4 pb-8 sm:px-6">
+        <div className="grid gap-3 sm:grid-cols-3">
           {STEPS.map(({ icon: Icon, title, text }, index) => (
-            <div
-              key={title}
-              className="rounded-xl border bg-card p-3 text-center sm:p-4 sm:text-left tiny:p-3"
-            >
-              <div className="mb-2 flex flex-col items-center gap-2.5 sm:mb-2.5 sm:flex-row">
+            <div key={title} className="rounded-xl border bg-card p-4">
+              <div className="mb-2.5 flex items-center gap-2.5">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-secondary text-primary">
                   <Icon className="h-4 w-4" />
                 </span>
-                <span className="hidden text-xs font-medium text-muted-foreground sm:inline">
+                <span className="text-xs font-medium text-muted-foreground">
                   Step {index + 1}
                 </span>
               </div>
-              <h2 className="text-xs font-semibold sm:text-sm">{title}</h2>
-              <p className="mt-1 hidden text-xs leading-relaxed text-muted-foreground sm:block tiny:hidden">
+              <h2 className="text-sm font-semibold">{title}</h2>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 {text}
               </p>
             </div>

@@ -8,15 +8,15 @@ import { NavBar } from "./NavBar";
 type LayoutProps = {
   title?: string;
   showSearch?: boolean;
-  // Vertically centre the page content in the space between nav and footer.
-  centered?: boolean;
+  // Keep the footer pinned to the bottom of the screen while scrolling.
+  stickyFooter?: boolean;
   children: React.ReactNode;
 };
 
 export function Layout({
   title,
   showSearch = true,
-  centered = false,
+  stickyFooter = false,
   children,
 }: LayoutProps) {
   return (
@@ -25,19 +25,22 @@ export function Layout({
         <title>{title ? `${title} · SquerryDB` : "SquerryDB"}</title>
       </Head>
       <NavBar showSearch={showSearch} />
-      <main
-        className={cn("flex-1", centered && "flex flex-col justify-center")}
-      >
-        {children}
-      </main>
-      <Footer />
+      <main className="flex-1">{children}</main>
+      <Footer sticky={stickyFooter} />
     </div>
   );
 }
 
-function Footer() {
+function Footer({ sticky }: { sticky: boolean }) {
   return (
-    <footer className="border-t bg-card/50">
+    <footer
+      className={cn(
+        "border-t",
+        sticky
+          ? "sticky bottom-0 z-30 bg-background/90 backdrop-blur-md"
+          : "bg-card/50"
+      )}
+    >
       <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p>
           <span className="font-medium text-foreground">SquerryDB</span> · Data
