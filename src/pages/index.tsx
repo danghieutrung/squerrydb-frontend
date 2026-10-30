@@ -40,18 +40,18 @@ export default function Home() {
         >
           <div className="absolute inset-x-0 -top-40 mx-auto h-[32rem] max-w-4xl rounded-full bg-gradient-to-br from-violet-300/50 via-purple-200/40 to-fuchsia-200/30 blur-3xl" />
         </div>
-        <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-14 pt-8 text-center sm:pt-12">
-          <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-card/70 px-3 py-1 text-xs font-medium text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
+        <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-6 pt-6 text-center sm:pt-8">
+          <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-card/70 px-2.5 py-0.5 text-xs font-medium text-primary">
+            <Sparkles className="h-3 w-3" />
             Episode ratings, visualized
           </span>
-          <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl">
+          <h1 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl">
             See how every episode{" "}
             <span className="bg-gradient-to-r from-violet-600 to-purple-500 bg-clip-text text-transparent">
               really stacks up
             </span>
           </h1>
-          <p className="mt-4 max-w-xl text-balance text-lg text-muted-foreground">
+          <p className="mt-3 max-w-lg text-balance text-muted-foreground">
             SquerryDB charts the IMDb rating of every episode of a TV series, so
             you can spot the peaks, the slumps and the season that lost the
             plot.
@@ -61,16 +61,16 @@ export default function Home() {
             variant="hero"
             placeholder="Try “Breaking Bad”"
             autoFocus
-            className="mt-8 max-w-xl"
+            className="mt-6 max-w-xl"
           />
 
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-sm">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
             <span className="text-muted-foreground">Popular:</span>
             {EXAMPLES.map(({ title, tconst }) => (
               <Link
                 key={tconst}
                 href={`/chart/${tconst}`}
-                className="rounded-full border bg-card px-3 py-1 transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground"
+                className="rounded-full border bg-card px-2.5 py-1 transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground"
               >
                 {title}
               </Link>
@@ -79,20 +79,22 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-4 pb-24 sm:px-6">
-        <div className="grid gap-4 sm:grid-cols-3">
+      <section className="mx-auto max-w-5xl px-4 pb-8 sm:px-6">
+        <div className="grid gap-3 sm:grid-cols-3">
           {STEPS.map(({ icon: Icon, title, text }, index) => (
-            <div key={title} className="rounded-2xl border bg-card p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary text-primary">
-                  <Icon className="h-5 w-5" />
+            <div key={title} className="rounded-xl border bg-card p-4">
+              <div className="mb-2.5 flex items-center gap-2.5">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-secondary text-primary">
+                  <Icon className="h-4 w-4" />
                 </span>
                 <span className="text-xs font-medium text-muted-foreground">
                   Step {index + 1}
                 </span>
               </div>
-              <h2 className="font-semibold">{title}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+              <h2 className="text-sm font-semibold">{title}</h2>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                {text}
+              </p>
             </div>
           ))}
         </div>
