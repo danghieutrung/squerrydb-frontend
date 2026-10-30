@@ -40,18 +40,18 @@ export default function Home() {
         >
           <div className="absolute inset-x-0 -top-40 mx-auto h-[32rem] max-w-4xl rounded-full bg-gradient-to-br from-violet-300/50 via-purple-200/40 to-fuchsia-200/30 blur-3xl" />
         </div>
-        <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-16 pt-20 text-center sm:pt-28">
-          <span className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-card/70 px-3 py-1 text-xs font-medium text-primary">
+        <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-14 pt-8 text-center sm:pt-12">
+          <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-card/70 px-3 py-1 text-xs font-medium text-primary">
             <Sparkles className="h-3.5 w-3.5" />
             Episode ratings, visualized
           </span>
-          <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-6xl">
+          <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl">
             See how every episode{" "}
             <span className="bg-gradient-to-r from-violet-600 to-purple-500 bg-clip-text text-transparent">
               really stacks up
             </span>
           </h1>
-          <p className="mt-5 max-w-xl text-balance text-lg text-muted-foreground">
+          <p className="mt-4 max-w-xl text-balance text-lg text-muted-foreground">
             SquerryDB charts the IMDb rating of every episode of a TV series, so
             you can spot the peaks, the slumps and the season that lost the
             plot.
@@ -61,7 +61,7 @@ export default function Home() {
             variant="hero"
             placeholder="Try “Breaking Bad”"
             autoFocus
-            className="mt-10 max-w-xl"
+            className="mt-8 max-w-xl"
           />
 
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-sm">
