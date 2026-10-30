@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ExternalLink, Mail, Menu, X } from "lucide-react";
+import { ChartSpline, ExternalLink, Mail, Menu, X } from "lucide-react";
 
 import { CONTACT_EMAIL, SOCIAL_LINKS } from "@/lib/links";
 import { SearchBox } from "./SearchBox";
@@ -9,8 +9,8 @@ import { SearchBox } from "./SearchBox";
 export function Logo() {
   return (
     <Link href="/" className="flex shrink-0 items-center gap-2">
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 text-sm font-bold text-white shadow-sm shadow-primary/30">
-        S
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 text-white shadow-sm shadow-primary/30">
+        <ChartSpline className="h-[18px] w-[18px]" strokeWidth={2.25} />
       </span>
       <span className="text-lg font-semibold tracking-tight">
         Squerry<span className="text-primary">DB</span>
