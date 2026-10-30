@@ -122,6 +122,9 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
   return (
     <div>
       <div className="-mx-3 mb-2 flex items-center gap-1.5 overflow-x-auto px-3 pb-1 sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-0">
+        <span className="mr-1 shrink-0 text-xs font-medium text-muted-foreground">
+          Seasons
+        </span>
         {seasons.map(({ season, episodes }) => {
           const isHidden = hidden.has(season);
           const color = episodes[0].color;
@@ -132,18 +135,25 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
               onMouseEnter={() => !isHidden && setHovered(season)}
               onMouseLeave={() => setHovered(null)}
               aria-pressed={!isHidden}
+              aria-label={`Season ${season}`}
+              title={`${isHidden ? "Show" : "Hide"} season ${season}`}
               className={cn(
-                "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors",
+                "h-6 min-w-6 shrink-0 rounded-md border px-1.5 text-xs font-semibold tabular-nums transition-colors",
                 isHidden
-                  ? "border-dashed text-muted-foreground hover:bg-muted"
-                  : "bg-card hover:bg-accent"
+                  ? "border-dashed text-muted-foreground/60 hover:bg-muted"
+                  : "hover:brightness-95"
               )}
+              style={
+                isHidden
+                  ? undefined
+                  : {
+                      color,
+                      backgroundColor: `${color}14`,
+                      borderColor: `${color}55`,
+                    }
+              }
             >
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: isHidden ? "transparent" : color, border: `2px solid ${color}` }}
-              />
-              Season {season}
+              {season}
             </button>
           );
         })}
