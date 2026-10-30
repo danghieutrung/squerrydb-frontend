@@ -26,11 +26,35 @@ const spaceBelow = () => (window.innerWidth < 640 ? 72 : 40);
 const MIN_HEIGHT = 256;
 const MAX_HEIGHT = 480;
 
+// Smallest horizontal gap, in pixels, between two season labels on the x axis.
+const MIN_TICK_GAP = 34;
+// Width taken by the y axis and chart margins, i.e. not part of the plot area.
+const PLOT_INSET = 36;
+
+// Labels every season if there's room, otherwise every 2nd, 5th, 10th…
+// season so the labels stay evenly spaced instead of randomly dropped.
+function pickSeasonTicks(seasons: SeasonSummary[], lastX: number, width: number) {
+  const pxPerEpisode = Math.max(width - PLOT_INSET, 1) / lastX;
+  const starts = seasons.map((s) => ({ season: s.season, x: s.episodes[0].x }));
+
+  for (const step of [1, 2, 5, 10, 20, 50]) {
+    const picked = starts.filter(({ season }) =>
+      step <= 2 ? (season - 1) % step === 0 : season === 1 || season % step === 0
+    );
+    const fits = picked.every(
+      (tick, i) => i === 0 || (tick.x - picked[i - 1].x) * pxPerEpisode >= MIN_TICK_GAP
+    );
+    if (fits) return picked;
+  }
+  return starts.slice(0, 1);
+}
+
 // Sizes the chart so its bottom edge sits inside the first screen,
 // however tall the header and season toggles above it end up.
 function useFitToViewport() {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(MAX_HEIGHT);
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
     const el = ref.current;
@@ -39,6 +63,7 @@ function useFitToViewport() {
       const top = el.getBoundingClientRect().top + window.scrollY;
       const available = window.innerHeight - top - spaceBelow();
       setHeight(Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, available)));
+      setWidth(el.clientWidth);
     };
     update();
     const observer = new ResizeObserver(update);
@@ -50,13 +75,17 @@ function useFitToViewport() {
     };
   }, []);
 
-  return { ref, height };
+  return { ref, height, width };
 }
 
 export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) {
   const [hidden, setHidden] = useState<Set<number>>(new Set());
   const [hovered, setHovered] = useState<number | null>(null);
-  const { ref: chartRef, height: chartHeight } = useFitToViewport();
+  const {
+    ref: chartRef,
+    height: chartHeight,
+    width: chartWidth,
+  } = useFitToViewport();
 
   const { boundaries, lastX, minY, fitLines } = useMemo(() => {
     const allPoints = seasons.flatMap((s) => s.episodes);
@@ -72,6 +101,10 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
     };
   }, [seasons]);
 
+  const xTicks = useMemo(
+    () => pickSeasonTicks(seasons, lastX, chartWidth),
+    [seasons, lastX, chartWidth]
+  );
   const yTicks = Array.from({ length: 11 - minY }, (_, i) => minY + i);
 
   const toggle = (season: number) => {
@@ -141,10 +174,11 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
             type="number"
             dataKey="x"
             domain={[0.5, lastX + 0.5]}
-            ticks={seasons.map((s) => s.episodes[0].x)}
+            ticks={xTicks.map((t) => t.x)}
             tickFormatter={(x) =>
-              `S${seasons.find((s) => s.episodes[0].x === x)?.season ?? ""}`
+              `S${xTicks.find((t) => t.x === x)?.season ?? ""}`
             }
+            interval={0}
             tickLine={false}
             axisLine={false}
             tick={axisTick}
