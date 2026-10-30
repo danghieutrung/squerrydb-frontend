@@ -1,4 +1,4 @@
-import { Github, Globe, Linkedin, Music } from "lucide-react";
+import { Github, Globe, Linkedin } from "lucide-react";
 
 export const CONTACT_EMAIL = "contact.hieudang@gmail.com";
 
@@ -10,11 +10,6 @@ export const SOCIAL_LINKS = [
     icon: Linkedin,
   },
   { label: "Website", href: "https://dangtrunghieu.vercel.app/", icon: Globe },
-  {
-    label: "Spotify",
-    href: "https://open.spotify.com/user/vejhzanembwlmo1vslzsmrux9",
-    icon: Music,
-  },
 ];
 
 export const IMDB_DATASETS_URL =
