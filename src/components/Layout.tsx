@@ -1,23 +1,35 @@
 import Head from "next/head";
 import { Mail } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { CONTACT_EMAIL, IMDB_DATASETS_URL, SOCIAL_LINKS } from "@/lib/links";
 import { NavBar } from "./NavBar";
 
 type LayoutProps = {
   title?: string;
   showSearch?: boolean;
+  // Vertically centre the page content in the space between nav and footer.
+  centered?: boolean;
   children: React.ReactNode;
 };
 
-export function Layout({ title, showSearch = true, children }: LayoutProps) {
+export function Layout({
+  title,
+  showSearch = true,
+  centered = false,
+  children,
+}: LayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
       <Head>
         <title>{title ? `${title} · SquerryDB` : "SquerryDB"}</title>
       </Head>
       <NavBar showSearch={showSearch} />
-      <main className="flex-1">{children}</main>
+      <main
+        className={cn("flex-1", centered && "flex flex-col justify-center")}
+      >
+        {children}
+      </main>
       <Footer />
     </div>
   );
