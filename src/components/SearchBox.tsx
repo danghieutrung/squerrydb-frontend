@@ -109,7 +109,7 @@ export function SearchBox({
           className={cn(
             "flex items-center gap-2 border bg-card transition-shadow focus-within:border-primary/60 focus-within:ring-4 focus-within:ring-primary/15",
             isHero
-              ? "h-14 rounded-2xl pl-5 pr-2 shadow-lg shadow-primary/5"
+              ? "h-12 rounded-2xl pl-4 pr-1.5 shadow-lg shadow-primary/5"
               : "h-10 rounded-xl px-3"
           )}
         >
@@ -148,7 +148,7 @@ export function SearchBox({
           {isHero && (
             <button
               type="submit"
-              className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              className="flex h-9 shrink-0 items-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Search
               <ArrowRight className="h-4 w-4" />

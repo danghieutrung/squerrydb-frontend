@@ -50,7 +50,7 @@ export function NavBar({ showSearch = true }: { showSearch?: boolean }) {
 
   return (
     <nav className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4 sm:px-6">
         <div className={showSearch ? "hidden sm:block" : undefined}>
           <Logo />
         </div>
