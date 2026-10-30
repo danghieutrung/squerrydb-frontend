@@ -17,15 +17,18 @@ export function formatRating(rating?: number | null) {
   return rating ? rating.toFixed(1) : "–";
 }
 
-// Colour bands for ratings, best first.
-export const RATING_BANDS = [
-  { min: 8, label: "8+", text: "text-green-600", dot: "bg-green-600" },
-  { min: 7, label: "7–7.9", text: "text-amber-500", dot: "bg-amber-500" },
-  { min: 5, label: "5–6.9", text: "text-red-600", dot: "bg-red-600" },
-  { min: 0, label: "Below 5", text: "text-neutral-950", dot: "bg-neutral-950" },
+// Text colour for each rating band, best first; anything 1.5 or below is black.
+const RATING_COLORS = [
+  { min: 9, className: "text-emerald-700" },
+  { min: 8, className: "text-green-600" },
+  { min: 7, className: "text-amber-500" },
+  { min: 6, className: "text-orange-500" },
+  { min: 4, className: "text-red-600" },
+  { min: 0, className: "text-red-900" },
 ];
 
 export function ratingColor(rating?: number | null) {
   if (!rating) return "text-muted-foreground";
-  return RATING_BANDS.find((band) => rating >= band.min)!.text;
+  if (rating <= 1.5) return "text-neutral-950";
+  return RATING_COLORS.find((band) => rating >= band.min)!.className;
 }

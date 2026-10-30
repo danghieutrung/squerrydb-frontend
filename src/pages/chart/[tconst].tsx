@@ -17,7 +17,6 @@ import {
   formatRating,
   formatVotes,
   formatYears,
-  RATING_BANDS,
   ratingColor,
 } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -160,7 +159,7 @@ function SeriesHeader({
           <p
             className={cn(
               "text-3xl font-bold tabular-nums",
-              ratingColor(series.averagerating)
+              ratingColor(series.averagerating),
             )}
           >
             {formatRating(series.averagerating)}
@@ -214,7 +213,7 @@ function Highlights({ seasons }: { seasons: SeasonSummary[] }) {
         <p
           className={cn(
             "mt-3 text-2xl font-semibold tabular-nums",
-            ratingColor(bestSeason.average)
+            ratingColor(bestSeason.average),
           )}
         >
           {bestSeason.average.toFixed(2)}
@@ -253,7 +252,7 @@ function EpisodeCard({
       <p
         className={cn(
           "mt-3 text-2xl font-semibold tabular-nums",
-          ratingColor(episode.rating)
+          ratingColor(episode.rating),
         )}
       >
         {episode.rating.toFixed(1)}
@@ -266,26 +265,10 @@ function EpisodeCard({
   );
 }
 
-function RatingKey() {
-  return (
-    <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-      {RATING_BANDS.map(({ label, dot }) => (
-        <li key={label} className="flex items-center gap-1.5">
-          <span className={cn("h-2 w-2 rounded-full", dot)} />
-          {label}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 function SeasonTable({ seasons }: { seasons: SeasonSummary[] }) {
   return (
     <section className="mt-4 overflow-hidden rounded-2xl border bg-card">
-      <div className="flex flex-wrap items-center justify-between gap-2 px-5 pt-5 sm:px-6">
-        <h2 className="font-semibold">Season by season</h2>
-        <RatingKey />
-      </div>
+      <h2 className="px-5 pt-5 font-semibold sm:px-6">Season by season</h2>
       <div className="mt-3 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -316,7 +299,7 @@ function SeasonTable({ seasons }: { seasons: SeasonSummary[] }) {
                 <td
                   className={cn(
                     "px-3 py-3 text-right font-semibold tabular-nums",
-                    ratingColor(average)
+                    ratingColor(average),
                   )}
                 >
                   {average.toFixed(2)}
@@ -331,7 +314,7 @@ function SeasonTable({ seasons }: { seasons: SeasonSummary[] }) {
                     <span
                       className={cn(
                         "font-medium tabular-nums",
-                        ratingColor(best.rating)
+                        ratingColor(best.rating),
                       )}
                     >
                       {best.rating.toFixed(1)}
