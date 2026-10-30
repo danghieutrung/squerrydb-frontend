@@ -2,6 +2,9 @@
 
 SquerryDB charts the IMDb rating of every episode of a TV series, so you can spot the peaks, the slumps and the season that lost the plot.
 
+<img width="959" height="413" alt="image" src="https://github.com/user-attachments/assets/696ffd86-d04a-4980-93ba-88d99c5e54ad" />
+
+
 This repo is the Next.js frontend. It talks to the [SquerryDB backend](https://github.com/danghieutrung/squerrydb-backend), a FastAPI + Strawberry GraphQL API over PostgreSQL.
 
 ## Features
