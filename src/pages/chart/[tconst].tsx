@@ -90,17 +90,17 @@ export default function ChartPage() {
 
   return (
     <Layout title={series.primarytitle}>
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
         <SeriesHeader series={series} seasons={seasons} />
 
         {seasons.length === 0 ? (
-          <div className="mt-8 rounded-2xl border bg-card p-10 text-center text-muted-foreground">
+          <div className="mt-4 rounded-2xl border bg-card p-10 text-center text-muted-foreground">
             No episodes of this series have IMDb ratings yet.
           </div>
         ) : (
           <>
-            <section className="mt-8 rounded-2xl border bg-card p-4 sm:p-6">
-              <h2 className="mb-4 font-semibold">Episode ratings</h2>
+            <section className="mt-4 rounded-2xl border bg-card p-3 sm:p-4">
+              <h2 className="sr-only">Episode ratings</h2>
               <SquerryChart seasons={seasons} />
             </section>
 
@@ -124,15 +124,12 @@ function SeriesHeader({
   const episodeCount = series.episodes.length;
 
   return (
-    <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+    <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <p className="text-sm font-medium text-primary">
-          {formatYears(series.startyear, series.endyear)}
-        </p>
-        <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           {series.primarytitle}
         </h1>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+        <div className="mt-2 flex flex-wrap items-center gap-2">
           {genres.map((genre) => (
             <span
               key={genre}
@@ -142,7 +139,10 @@ function SeriesHeader({
             </span>
           ))}
           <span className="text-sm text-muted-foreground">
-            {seasons.length} {seasons.length === 1 ? "season" : "seasons"} ·{" "}
+            <span className="font-medium text-primary">
+              {formatYears(series.startyear, series.endyear)}
+            </span>{" "}
+            · {seasons.length} {seasons.length === 1 ? "season" : "seasons"} ·{" "}
             {episodeCount} {episodeCount === 1 ? "episode" : "episodes"}
           </span>
         </div>
@@ -150,7 +150,7 @@ function SeriesHeader({
 
       <div className="flex items-center gap-4">
         <div className="text-right">
-          <p className="text-4xl font-bold tabular-nums text-primary">
+          <p className="text-3xl font-bold tabular-nums text-primary">
             {formatRating(series.averagerating)}
             <span className="text-base font-medium text-muted-foreground">
               /10
@@ -164,7 +164,7 @@ function SeriesHeader({
           href={imdbTitleUrl(series.tconst)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
           IMDb
           <ExternalLink className="h-4 w-4" />
@@ -184,7 +184,7 @@ function Highlights({ seasons }: { seasons: SeasonSummary[] }) {
   const bestSeason = seasons.reduce((a, b) => (b.average > a.average ? b : a));
 
   return (
-    <section className="mt-6 grid gap-4 sm:grid-cols-3">
+    <section className="mt-4 grid gap-4 sm:grid-cols-3">
       <EpisodeCard
         label="Highest rated episode"
         icon={TrendingUp}
@@ -246,7 +246,7 @@ function EpisodeCard({
 
 function SeasonTable({ seasons }: { seasons: SeasonSummary[] }) {
   return (
-    <section className="mt-6 overflow-hidden rounded-2xl border bg-card">
+    <section className="mt-4 overflow-hidden rounded-2xl border bg-card">
       <h2 className="px-5 pt-5 font-semibold sm:px-6">Season by season</h2>
       <div className="mt-3 overflow-x-auto">
         <table className="w-full text-sm">
@@ -302,12 +302,12 @@ function SeasonTable({ seasons }: { seasons: SeasonSummary[] }) {
 
 function ChartSkeleton() {
   return (
-    <div className="mx-auto max-w-6xl animate-pulse px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-6xl animate-pulse px-4 py-5 sm:px-6">
       <div className="h-4 w-24 rounded bg-muted" />
       <div className="mt-3 h-9 w-72 rounded bg-muted" />
       <div className="mt-4 h-5 w-48 rounded bg-muted" />
-      <div className="mt-8 h-[28rem] rounded-2xl border bg-card" />
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+      <div className="mt-4 h-[clamp(16rem,calc(100svh-18rem),30rem)] rounded-2xl border bg-card" />
+      <div className="mt-4 grid gap-4 sm:grid-cols-3">
         {[0, 1, 2].map((i) => (
           <div key={i} className="h-28 rounded-2xl border bg-card" />
         ))}
