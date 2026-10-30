@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -20,9 +20,43 @@ const chartConfig = {} satisfies ChartConfig;
 
 const axisTick = { fontSize: 12, fill: "hsl(var(--muted-foreground))" };
 
+// Room left under the chart for the caption and card padding; the
+// caption wraps to more lines on narrow screens.
+const spaceBelow = () => (window.innerWidth < 640 ? 72 : 40);
+const MIN_HEIGHT = 256;
+const MAX_HEIGHT = 480;
+
+// Sizes the chart so its bottom edge sits inside the first screen,
+// however tall the header and season toggles above it end up.
+function useFitToViewport() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(MAX_HEIGHT);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      const available = window.innerHeight - top - spaceBelow();
+      setHeight(Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, available)));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    if (el.parentElement) observer.observe(el.parentElement);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  return { ref, height };
+}
+
 export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) {
   const [hidden, setHidden] = useState<Set<number>>(new Set());
   const [hovered, setHovered] = useState<number | null>(null);
+  const { ref: chartRef, height: chartHeight } = useFitToViewport();
 
   const { boundaries, lastX, minY, fitLines } = useMemo(() => {
     const allPoints = seasons.flatMap((s) => s.episodes);
@@ -54,7 +88,7 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="-mx-3 mb-2 flex items-center gap-1.5 overflow-x-auto px-3 pb-1 sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-0">
         {seasons.map(({ season, episodes }) => {
           const isHidden = hidden.has(season);
           const color = episodes[0].color;
@@ -66,7 +100,7 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
               onMouseLeave={() => setHovered(null)}
               aria-pressed={!isHidden}
               className={cn(
-                "flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors",
                 isHidden
                   ? "border-dashed text-muted-foreground hover:bg-muted"
                   : "bg-card hover:bg-accent"
@@ -83,7 +117,7 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
         {hidden.size > 0 && (
           <button
             onClick={() => setHidden(new Set())}
-            className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-primary hover:underline"
+            className="flex shrink-0 items-center gap-1 whitespace-nowrap px-2 py-1 text-xs font-medium text-primary hover:underline"
           >
             <Eye className="h-3.5 w-3.5" /> Show all
           </button>
@@ -91,15 +125,17 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
         {hidden.size === 0 && seasons.length > 1 && (
           <button
             onClick={() => setHidden(new Set(seasons.map((s) => s.season)))}
-            className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-muted-foreground hover:text-primary"
+            className="flex shrink-0 items-center gap-1 whitespace-nowrap px-2 py-1 text-xs font-medium text-muted-foreground hover:text-primary"
           >
             <EyeOff className="h-3.5 w-3.5" /> Hide all
           </button>
         )}
       </div>
 
-      <ChartContainer config={chartConfig} className="aspect-auto h-[22rem] w-full sm:h-[28rem]">
-        <LineChart margin={{ top: 10, right: 10, left: -10, bottom: 10 }}>
+      <ChartContainer config={chartConfig} ref={chartRef}
+        className="aspect-auto w-full"
+        style={{ height: chartHeight }}>
+        <LineChart margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
           <CartesianGrid vertical={false} strokeDasharray="4 4" />
           <XAxis
             type="number"
@@ -191,7 +227,7 @@ export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) 
         </LineChart>
       </ChartContainer>
 
-      <p className="mt-3 text-center text-xs text-muted-foreground">
+      <p className="mt-1 text-center text-xs text-muted-foreground">
         Each dot is an episode. Lines show each season&apos;s trend. Click a
         season to hide it, or a dot to open the episode on IMDb.
       </p>
