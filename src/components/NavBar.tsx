@@ -1,38 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-  ExternalLink,
-  Github,
-  Globe,
-  Linkedin,
-  Mail,
-  Menu,
-  Music,
-  X,
-} from "lucide-react";
-import { NavSearchBar } from "./NavSearchBar";
+import { ExternalLink, Mail, Menu, X } from "lucide-react";
 
-import "../app/globals.css";
+import { CONTACT_EMAIL, SOCIAL_LINKS } from "@/lib/links";
+import { SearchBox } from "./SearchBox";
 
-const EMAIL = "contact.hieudang@gmail.com";
+export function Logo() {
+  return (
+    <Link href="/" className="flex shrink-0 items-center gap-2">
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 text-sm font-bold text-white shadow-sm shadow-primary/30">
+        S
+      </span>
+      <span className="text-lg font-semibold tracking-tight">
+        Squerry<span className="text-primary">DB</span>
+      </span>
+    </Link>
+  );
+}
 
-const LINKS = [
-  { label: "GitHub", href: "https://github.com/danghieutrung", icon: Github },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/trunghieudang",
-    icon: Linkedin,
-  },
-  { label: "Website", href: "https://dangtrunghieu.vercel.app/", icon: Globe },
-  {
-    label: "Spotify",
-    href: "https://open.spotify.com/user/vejhzanembwlmo1vslzsmrux9",
-    icon: Music,
-  },
-];
-
-export function NavBar({ displayNavSearchBar = true }) {
+export function NavBar({ showSearch = true }: { showSearch?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -62,20 +49,15 @@ export function NavBar({ displayNavSearchBar = true }) {
   }, [menuOpen, router.events]);
 
   return (
-    <nav className="sticky top-0 z-40 border-b border-violet-200/70 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/80">
-      <div className="mx-auto flex h-16 max-w-screen-xl items-center justify-between gap-4 px-4">
-        <Link href="/" className="hidden shrink-0 flex-col leading-tight sm:flex">
-          <span className="text-lg font-bold tracking-tight text-violet-600 dark:text-violet-400">
-            SquerryDB
-          </span>
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            Visualizing IMDb series
-          </span>
-        </Link>
+    <nav className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
+        <div className={showSearch ? "hidden sm:block" : undefined}>
+          <Logo />
+        </div>
 
-        {displayNavSearchBar && (
+        {showSearch && (
           <div className="flex flex-1 justify-center">
-            <NavSearchBar placeholder="Search series" />
+            <SearchBox className="max-w-md" />
           </div>
         )}
 
@@ -83,7 +65,7 @@ export function NavBar({ displayNavSearchBar = true }) {
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-violet-50 hover:text-violet-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 dark:text-gray-300 dark:hover:bg-gray-800"
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-controls="nav-menu"
             aria-expanded={menuOpen}
             aria-haspopup="true"
@@ -97,16 +79,19 @@ export function NavBar({ displayNavSearchBar = true }) {
           {menuOpen && (
             <div
               id="nav-menu"
-              className="absolute right-0 mt-2 w-60 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg animate-in fade-in-0 zoom-in-95 dark:border-gray-700 dark:bg-gray-900"
+              className="absolute right-0 mt-2 w-64 overflow-hidden rounded-xl border bg-popover shadow-xl shadow-primary/10 animate-in fade-in-0 zoom-in-95"
             >
-              <ul className="p-1.5">
-                {LINKS.map(({ label, href, icon: Icon }) => (
+              <p className="px-4 pb-1 pt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Find me on
+              </p>
+              <ul className="p-1.5 pt-0">
+                {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
                   <li key={label}>
                     <a
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-violet-300"
+                      className="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
                       <Icon className="h-4 w-4" />
                       <span className="flex-1">{label}</span>
@@ -116,13 +101,13 @@ export function NavBar({ displayNavSearchBar = true }) {
                 ))}
               </ul>
 
-              <div className="border-t border-gray-100 p-1.5 dark:border-gray-800">
+              <div className="border-t p-1.5">
                 <a
-                  href={`mailto:${EMAIL}`}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-violet-300"
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
                   <Mail className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{EMAIL}</span>
+                  <span className="truncate">{CONTACT_EMAIL}</span>
                 </a>
               </div>
             </div>

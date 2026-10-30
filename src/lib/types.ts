@@ -42,12 +42,6 @@ export type ScatterEpisode = {
   color: string;
 };
 
-export type LegendPayload = {
-  value: string;
-};
-
-export type BarProps = Record<string, string|boolean>;
-
 export type BestFitLine = {
   x: number;
   y: number;

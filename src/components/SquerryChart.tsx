@@ -1,284 +1,229 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-
-import { Line, XAxis, YAxis, Legend, ReferenceLine, LineChart } from "recharts";
-
+import { useMemo, useState } from "react";
 import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+  CartesianGrid,
+  Line,
+  LineChart,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Eye, EyeOff } from "lucide-react";
 
-import {
-  Episode,
-  BestFitLine,
-  LegendPayload,
-  ScatterEpisode,
-  Series,
-} from "@/lib/types";
-import { computeBestFitLine } from "@/lib/utils";
-
-const COLORS = [
-  "#4B164C",
-  "#DDA853",
-  "#8E1616",
-  "#B771E5",
-  "#8F71FF",
-  "#368B85",
-  "#2940D3",
-  "#CA3E6B",
-  "#BCBD22",
-  "#17BECF",
-];
-
-const axisConfig = {
-  fontSize: 12,
-  stroke: "#C9A0FF",
-  strokeWidth: 0.5,
-};
+import { ChartConfig, ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import { ScatterEpisode } from "@/lib/types";
+import { cn, computeBestFitLine } from "@/lib/utils";
+import { episodeCode, SeasonSummary } from "@/lib/series";
+import { formatVotes } from "@/lib/format";
+import { imdbTitleUrl } from "@/lib/links";
 
 const chartConfig = {} satisfies ChartConfig;
 
-export default function SquerryChart({ seriesData }: { seriesData: Series }) {
-  const [barProps, setBarProps] = useState<Record<string, string | boolean>>({
-    hover: "",
-  });
+const axisTick = { fontSize: 12, fill: "hsl(var(--muted-foreground))" };
 
-  const [finalEpisodes, setFinalEpisodes] = useState<number[]>([]);
-  const [groupedRatingsData, setGroupedRatingsData] = useState<
-    Record<number, ScatterEpisode[]>
-  >({});
-  const [uniqueSeasons, setUniqueSeasons] = useState<number[]>([]);
+export default function SquerryChart({ seasons }: { seasons: SeasonSummary[] }) {
+  const [hidden, setHidden] = useState<Set<number>>(new Set());
+  const [hovered, setHovered] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (!seriesData || !seriesData.episodes) return;
+  const { boundaries, lastX, minY, fitLines } = useMemo(() => {
+    const allPoints = seasons.flatMap((s) => s.episodes);
+    const lowest = Math.min(...allPoints.map((p) => p.rating));
+    return {
+      // x positions between seasons, where a divider is drawn
+      boundaries: seasons.slice(0, -1).map((s) => s.episodes.at(-1)!.x + 0.5),
+      lastX: allPoints.at(-1)!.x,
+      minY: Math.max(0, Math.floor(lowest) - 1),
+      fitLines: computeBestFitLine(
+        Object.fromEntries(seasons.map((s) => [s.season, s.episodes]))
+      ),
+    };
+  }, [seasons]);
 
-    const updatedFinalEpisodes: number[] = [];
-    let currentEpisode: number = seriesData.episodes[0].episodenumber - 1;
+  const yTicks = Array.from({ length: 11 - minY }, (_, i) => minY + i);
 
-    const updatedGroupedRatingsData = seriesData.episodes.reduce<
-      Record<number, ScatterEpisode[]>
-    >((acc, ep: Episode) => {
-      if (!acc[ep.seasonnumber]) {
-        acc[ep.seasonnumber] = [];
-        updatedFinalEpisodes.push(currentEpisode);
-      }
-
-      acc[ep.seasonnumber].push({
-        x: currentEpisode + 1,
-        y: ep.averagerating,
-        rating: ep.averagerating,
-        numvotes: ep.numvotes,
-        season: ep.seasonnumber,
-        episode: ep.episodenumber,
-        primarytitle: ep.primarytitle,
-        tconst: ep.tconst,
-        color: COLORS[(ep.seasonnumber - 1) % COLORS.length],
-      });
-
-      currentEpisode = currentEpisode + 1;
-      return acc;
-    }, {});
-
-    updatedFinalEpisodes.push(currentEpisode);
-
-    const updatedUniqueSeasons = Object.keys(updatedGroupedRatingsData).map(
-      Number
-    );
-    const labelSeasons: Record<string, string | boolean> =
-      updatedUniqueSeasons.reduce((acc, season) => {
-        acc[`Season ${season}`] = false;
-        return acc;
-      }, {} as Record<string, string | boolean>);
-
-    labelSeasons["hover"] = "";
-
-    setGroupedRatingsData(updatedGroupedRatingsData);
-    setFinalEpisodes(updatedFinalEpisodes);
-    setUniqueSeasons(updatedUniqueSeasons);
-    setBarProps(labelSeasons);
-  }, [seriesData]);
-
-  const handleLegendMouseEnter = (e: LegendPayload) => {
-    if (!barProps[e.value]) {
-      setBarProps({ ...barProps, hover: e.value });
-    }
-  };
-
-  const handleLegendMouseLeave = () => {
-    setBarProps({ ...barProps, hover: "" });
-  };
-
-  const selectSeasonLegend = (e: LegendPayload) => {
-    setBarProps({
-      ...barProps,
-      [e.value]: !barProps[e.value],
-      hover: "",
+  const toggle = (season: number) => {
+    setHidden((prev) => {
+      const next = new Set(prev);
+      if (next.has(season)) next.delete(season);
+      else next.add(season);
+      return next;
     });
   };
 
-  const bestFitLines: Record<number, BestFitLine> =
-    computeBestFitLine(groupedRatingsData);
-
-  if (!finalEpisodes.length)
-    return <p className="text-center">Loading chart...</p>;
+  const opacityFor = (season: number) =>
+    hovered === null || hovered === season ? 1 : 0.15;
 
   return (
     <div>
-      <ChartContainer config={chartConfig} className="w-full h-96">
-        <LineChart margin={{ top: 15, right: 20, left: 10, bottom: 20 }}>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {seasons.map(({ season, episodes }) => {
+          const isHidden = hidden.has(season);
+          const color = episodes[0].color;
+          return (
+            <button
+              key={season}
+              onClick={() => toggle(season)}
+              onMouseEnter={() => !isHidden && setHovered(season)}
+              onMouseLeave={() => setHovered(null)}
+              aria-pressed={!isHidden}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                isHidden
+                  ? "border-dashed text-muted-foreground hover:bg-muted"
+                  : "bg-card hover:bg-accent"
+              )}
+            >
+              <span
+                className="h-2.5 w-2.5 rounded-full"
+                style={{ backgroundColor: isHidden ? "transparent" : color, border: `2px solid ${color}` }}
+              />
+              Season {season}
+            </button>
+          );
+        })}
+        {hidden.size > 0 && (
+          <button
+            onClick={() => setHidden(new Set())}
+            className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-primary hover:underline"
+          >
+            <Eye className="h-3.5 w-3.5" /> Show all
+          </button>
+        )}
+        {hidden.size === 0 && seasons.length > 1 && (
+          <button
+            onClick={() => setHidden(new Set(seasons.map((s) => s.season)))}
+            className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-muted-foreground hover:text-primary"
+          >
+            <EyeOff className="h-3.5 w-3.5" /> Hide all
+          </button>
+        )}
+      </div>
+
+      <ChartContainer config={chartConfig} className="aspect-auto h-[22rem] w-full sm:h-[28rem]">
+        <LineChart margin={{ top: 10, right: 10, left: -10, bottom: 10 }}>
+          <CartesianGrid vertical={false} strokeDasharray="4 4" />
           <XAxis
             type="number"
             dataKey="x"
-            name="xaxis"
-            label={{
-              value: "Episode",
-              position: "insideBottom",
-              offset: 0,
-              ...axisConfig,
-            }}
-            ticks={finalEpisodes.slice(1)}
+            domain={[0.5, lastX + 0.5]}
+            ticks={seasons.map((s) => s.episodes[0].x)}
+            tickFormatter={(x) =>
+              `S${seasons.find((s) => s.episodes[0].x === x)?.season ?? ""}`
+            }
             tickLine={false}
-            tick={axisConfig}
-            domain={[0, finalEpisodes[finalEpisodes.length - 1] + 0.5]}
+            axisLine={false}
+            tick={axisTick}
             allowDuplicatedCategory={false}
           />
-
           <YAxis
             type="number"
             dataKey="y"
-            domain={[0, 10]}
-            ticks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-            label={{
-              value: "Rating",
-              angle: -90,
-              position: "Left",
-              ...axisConfig,
-            }}
-            tick={axisConfig}
+            domain={[minY, 10]}
+            ticks={yTicks}
+            tickLine={false}
+            axisLine={false}
+            tick={axisTick}
+            width={40}
           />
 
-          <ChartTooltip
-            cursor={false}
-            content={
-              <ChartTooltipContent
-                labelFormatter={(label, payload) => (
-                  <strong style={{ color: payload[0].payload.color }}>
-                    {payload[0].payload.season}.{payload[0].payload.episode} -{" "}
-                    {payload[0].payload.primarytitle}
-                  </strong>
-                )}
-                formatter={(value, name, item) => {
-                  return (
-                    <>
-                      <div
-                        className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
-                        style={
-                          {
-                            "--color-bg": item.payload.color,
-                          } as React.CSSProperties
-                        }
-                      />
-                      <div style={{ color: item.payload.color }}>{value}</div>
-                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                        <span
-                          className="font-normal text-muted-foreground"
-                          style={{ color: item.payload.color }}
-                        >
-                          ({item.payload.numvotes} votes)
-                        </span>
-                      </div>
-                    </>
-                  );
-                }}
+          <ChartTooltip cursor={false} content={<EpisodeTooltip />} />
+
+          {boundaries.map((x) => (
+            <ReferenceLine
+              key={`divider-${x}`}
+              x={x}
+              stroke="hsl(var(--border))"
+              strokeWidth={1}
+            />
+          ))}
+
+          {seasons.map(({ season, episodes }) => {
+            const color = episodes[0].color;
+            const segment = fitLines[season];
+            if (hidden.has(season) || episodes.length < 2) return null;
+            return (
+              <ReferenceLine
+                key={`trend-${season}`}
+                segment={segment}
+                stroke={color}
+                strokeWidth={2}
+                strokeOpacity={0.5 * opacityFor(season)}
+                ifOverflow="hidden"
               />
-            }
-          />
+            );
+          })}
 
-          <Legend
-            wrapperStyle={{
-              position: "relative",
-              marginTop: "-10px",
-            }}
-            iconType="circle"
-            onClick={selectSeasonLegend}
-            onMouseOver={handleLegendMouseEnter}
-            onMouseOut={handleLegendMouseLeave}
-          />
-
-          {uniqueSeasons.map((season) => {
-            const color = COLORS[(season - 1) % COLORS.length];
+          {seasons.map(({ season, episodes }) => {
+            const color = episodes[0].color;
             return (
               <Line
-                data={groupedRatingsData[season]}
-                key={`season-${season}${season < 10 ? " " : ""}`}
+                key={`season-${season}`}
+                data={episodes}
                 name={`Season ${season}`}
                 dataKey="y"
-                type="natural"
                 stroke={color}
                 strokeWidth={0}
+                isAnimationActive={false}
+                hide={hidden.has(season)}
                 dot={{
-                  r: 3,
+                  r: 3.5,
                   fill: color,
+                  strokeWidth: 0,
+                  fillOpacity: opacityFor(season),
                 }}
                 activeDot={{
                   r: 6,
                   fill: color,
+                  stroke: "white",
+                  strokeWidth: 2,
+                  cursor: "pointer",
                   onClick: (
-                    event: React.MouseEvent<SVGCircleElement, MouseEvent>,
-                    payload?: { payload: { tconst: string } }
+                    _event: unknown,
+                    point?: { payload?: ScatterEpisode }
                   ) => {
-                    if (payload && payload.payload) {
-                      const tconst = payload.payload.tconst;
-                      console.log(typeof payload);
-                      window.open(
-                        `https://www.imdb.com/title/${tconst}/`,
-                        "_blank"
-                      );
+                    if (point?.payload) {
+                      window.open(imdbTitleUrl(point.payload.tconst), "_blank");
                     }
                   },
                 }}
-                hide={barProps[`Season ${season}`] === true}
-              ></Line>
-            );
-          })}
-
-          {Object.keys(bestFitLines).map((seasonKey) => {
-            const season: number = Number(seasonKey);
-            const segment: BestFitLine = bestFitLines[season];
-            return (
-              <ReferenceLine
-                key={`BestFit-${season}`}
-                segment={segment}
-                stroke={COLORS[(season - 1) % COLORS.length]}
-                strokeWidth={barProps[`Season ${season}`] ? 0 : 1}
               />
             );
           })}
-
-          {finalEpisodes.slice(1).map((value, index) => (
-            <ReferenceLine
-              key={`XRefLine-${index}`}
-              x={value + 0.5}
-              stroke="black"
-              strokeDasharray="5 2"
-              strokeWidth={0.3}
-            />
-          ))}
-
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value, index) => (
-            <ReferenceLine
-              key={`YRefLine-${index}`}
-              y={value}
-              stroke="#4b0082"
-              strokeDasharray="5 1"
-              strokeWidth={0.2}
-            />
-          ))}
         </LineChart>
       </ChartContainer>
+
+      <p className="mt-3 text-center text-xs text-muted-foreground">
+        Each dot is an episode. Lines show each season&apos;s trend. Click a
+        season to hide it, or a dot to open the episode on IMDb.
+      </p>
+    </div>
+  );
+}
+
+function EpisodeTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: { payload: ScatterEpisode }[];
+}) {
+  const ep = payload?.[0]?.payload;
+  if (!active || !ep) return null;
+
+  return (
+    <div className="max-w-64 rounded-xl border bg-popover px-3 py-2.5 text-sm shadow-xl">
+      <div className="flex items-center gap-2 text-xs font-medium" style={{ color: ep.color }}>
+        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: ep.color }} />
+        {episodeCode(ep)}
+      </div>
+      <p className="mt-1 font-medium leading-snug">{ep.primarytitle}</p>
+      <div className="mt-1.5 flex items-baseline gap-2">
+        <span className="text-lg font-semibold tabular-nums">
+          {ep.rating.toFixed(1)}
+        </span>
+        <span className="text-xs text-muted-foreground">
+          {formatVotes(ep.numvotes)}
+        </span>
+      </div>
     </div>
   );
 }
