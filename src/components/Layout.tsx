@@ -26,35 +26,30 @@ export function Layout({ title, showSearch = true, children }: LayoutProps) {
 function Footer() {
   return (
     <footer className="border-t bg-card/50">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <div className="space-y-1">
-          <p>
-            <span className="font-medium text-foreground">SquerryDB</span> ·
-            Episode ratings for every TV series on IMDb.
-          </p>
-          <p className="text-xs">
-            Data from the{" "}
-            <a
-              href={IMDB_DATASETS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-2 hover:text-primary"
-            >
-              IMDb Non-Commercial Datasets
-            </a>
-            . Not affiliated with IMDb.
-          </p>
-        </div>
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <p>
+          <span className="font-medium text-foreground">SquerryDB</span> · Data
+          from the{" "}
+          <a
+            href={IMDB_DATASETS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-primary"
+          >
+            IMDb Non-Commercial Datasets
+          </a>
+          . Not affiliated with IMDb.
+        </p>
 
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex items-center gap-2">
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="flex items-center gap-2 hover:text-primary sm:mr-2"
+            className="mr-1 flex items-center gap-1.5 hover:text-primary"
           >
-            <Mail className="h-4 w-4" />
+            <Mail className="h-3.5 w-3.5" />
             {CONTACT_EMAIL}
           </a>
-          <div className="-ml-2 flex items-center gap-1 sm:ml-0">
+          <div className="flex items-center">
             {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
               <a
                 key={label}
@@ -63,9 +58,9 @@ function Footer() {
                 rel="noopener noreferrer"
                 aria-label={label}
                 title={label}
-                className="rounded-lg p-2 transition-colors hover:bg-accent hover:text-primary"
+                className="rounded-md p-1.5 transition-colors hover:bg-accent hover:text-primary"
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5" />
               </a>
             ))}
           </div>
